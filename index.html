@@ -9,9 +9,30 @@
 </head>
 
 <body>
-    <div id="cat"></div>
-    <div id="points">0</div>
-    <button id="startBtn">start</button>
+    <div id="instructions">
+        <p>
+            In Italy 🇮🇹, it's said that black cats 🐈‍⬛ bring bad luck, so when you see one, you should scream loudly
+            😱
+            to scare it away and possibly make some signs to ward off bad luck 🤘.
+        </p>
+        <p>
+            But be careful: if you scream when you see a cat of a different color 🐈, you lose points ❌ and ultimately
+            lose!
+        </p>
+    </div>
+
+    <div id="cats" hidden>
+        <div id="catWrapper"></div>
+    </div>
+    <div class="panel">
+        <div id="points" hidden>0</div>
+        <button id="startBtn">start</button>
+    </div>
+
+    <dialog id="dialog">
+        <p>You loose!</p>
+        <button id="restart">restart</button>
+    </dialog>
 
     <template>
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
