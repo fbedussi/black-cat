@@ -1,0 +1,167 @@
+body {
+    background-color: ghostwhite;
+}
+
+.cat {
+    width: 400px;
+
+    .smile-stroke,
+    .mouth {
+        fill: none;
+        stroke: black;
+    }
+
+    .wiskers {
+        stroke: lightgray;
+    }
+
+    .ears {
+        fill: pink;
+    }
+
+    .eyes {
+        fill: yellow;
+        stroke: black;
+    }
+
+    &.white {
+        .base {
+            fill: white;
+        }
+
+        .points,
+        .stripes,
+        .spot,
+        .smile,
+        .smile-stroke {
+            display: none;
+        }
+
+        .ears {
+            fill: pink;
+        }
+
+        .eyes {
+            fill: darkgray;
+        }
+    }
+
+    &.black {
+        .base {
+            fill: black;
+        }
+
+        .points,
+        .stripes,
+        .spot {
+            display: none;
+        }
+
+        .nose {
+            fill: pink;
+        }
+
+        .ears {
+            fill: grey;
+        }
+
+        .smile {
+            fill: white;
+        }
+
+        .smile-stroke,
+        .mouth {
+            stroke: darkgray;
+            fill: none;
+        }
+    }
+
+    &.striped {
+        .base {
+            fill: orange;
+        }
+
+        .spot,
+        .smile,
+        .smile-stroke {
+            display: none;
+        }
+
+        .stripes,
+        .ears {
+            fill: chocolate;
+        }
+    }
+
+    &.spotted {
+        .base {
+            fill: cornsilk;
+        }
+
+        .stripes,
+        .smile,
+        .smile-stroke,
+        .points {
+            display: none;
+        }
+    }
+
+    &.red {
+        .base {
+            fill: crimson;
+        }
+
+        .smile {
+            fill: white;
+        }
+
+        .ears {
+            fill: brown;
+        }
+
+        .points,
+        .spot,
+        .stripes:not(.chin) {
+            display: none;
+        }
+
+        .chin {
+            fill: firebrick;
+        }
+    }
+
+    &.grey {
+        .base {
+            fill: gray;
+        }
+
+        .stripes,
+        .smile,
+        .smile-stroke {
+            display: none;
+        }
+    }
+
+    &.purple {
+        .base {
+            fill: mediumorchid;
+        }
+
+        .spot,
+        .points {
+            display: none;
+        }
+
+        .ears {
+            fill: indigo;
+        }
+
+        .stripes {
+            fill: darkviolet;
+        }
+
+        .smile {
+            fill: white;
+        }
+    }
+}
