@@ -16,7 +16,7 @@ button {
 
 body {
     background-color: ghostwhite;
-    height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     font-size: 3rem;
@@ -36,7 +36,8 @@ body {
     }
 
     .cat {
-        transform: translateX(-20%);
+        transform: translateX(-5%);
+        width: max-content;
     }
 }
 
@@ -55,7 +56,7 @@ body {
 
 #catWrapper {
     &.left {
-        transform: translateY(-50%);
+        transform: translate(-5%, -50%);
         position: absolute;
         top: 50%;
 
@@ -65,7 +66,7 @@ body {
     }
 
     &.right {
-        transform: scaleX(-1) translateY(-50%);
+        transform: scaleX(-1) translate(-5%, -50%);
         position: absolute;
         right: 0;
         top: 50%;
@@ -76,7 +77,7 @@ body {
     }
 
     &.top-left {
-        transform: rotate(90deg);
+        transform: rotate(90deg) translateX(-5%);
         position: absolute;
         top: -40px;
 
@@ -86,7 +87,7 @@ body {
     }
 
     &.top-right {
-        transform: scaleX(-1) rotate(90deg);
+        transform: scaleX(-1) rotate(90deg) translateX(-5%);
         position: absolute;
         top: -40px;
         right: 0;
@@ -97,7 +98,7 @@ body {
     }
 
     &.bottom-right {
-        transform: scaleX(-1);
+        transform: scaleX(-1) translateX(-5%);
         position: absolute;
         bottom: 0px;
         right: 0;
@@ -110,6 +111,7 @@ body {
     &.bottom-left {
         position: absolute;
         bottom: 0px;
+        transform: translateX(-5%);
 
         .cat {
             transform: translate(-100%, 100%);
@@ -122,7 +124,7 @@ body {
 }
 
 .cat {
-    width: 400px;
+    width: max(400px, 70vmin);
     height: max-content;
     transition: transform 125ms;
 
@@ -305,5 +307,4 @@ dialog[open] {
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.5);
     }
-
 }

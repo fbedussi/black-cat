@@ -8,16 +8,15 @@ const selectRandom = arr => arr[Math.round(Math.random() * (arr.length - 1))]
 
 const showCat = () => {
     catWrapper.querySelector('svg')?.classList.remove('in')
-    selectedCat = ''
+    // selectedCat = ''
     setTimeout(() => {
-        const cats = ['black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'purple']
+        const cats = ['black', 'black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'purple']
         selectedCat = selectRandom(cats)
 
         const sides = ['left', 'top-left', 'top-right', 'right', 'bottom-left', 'bottom-right']
 
         const template = document.querySelector("template");
         const clone = template.content.cloneNode(true);
-        // catWrapper.style.setProperty("--scale", Math.min(1, Math.random() + 0.5))
         catWrapper.classList = selectRandom(sides)
         clone.querySelector('svg').classList = `cat ${selectedCat}`;
         catWrapper.innerHTML = '';
@@ -29,8 +28,6 @@ const showCat = () => {
         duration = duration - 10
         if (Number(points.textContent) >= 0) {
             setTimeout(showCat, Math.random() * Math.max(MIN_DURATION, duration))
-        } else {
-            dialog.showModal()
         }
     }, ANIMATION_DURATION + interval--)
 }
@@ -52,11 +49,16 @@ const listenUser = async () => {
         let sumSquares = 0.0;
         for (const amplitude of pcmData) { sumSquares += amplitude * amplitude; }
         const value = Math.sqrt(sumSquares / pcmData.length)
-        if (value > 0.1) {
+        if (value > 0.18) {
             if (selectedCat === 'black') {
                 points.textContent = Number(points.textContent) + 1
             } else {
-                points.textContent = Number(points.textContent) - 1
+                const updatedPoints = Number(points.textContent) - 1
+                points.textContent = updatedPoints
+
+                if (updatedPoints < 0) {
+                    dialog.showModal()
+                }
             }
         }
         window.requestAnimationFrame(onFrame)
