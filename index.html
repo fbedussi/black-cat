@@ -9,28 +9,36 @@
 </head>
 
 <body>
-    <div id="instructions">
+    <div id="instructionsEl">
         <p>
             In 🇮🇹, it's said that 🐈‍⬛ bring bad luck, so when you 👀 one, you should scream loudly
-            😱
-            to scare it away. If you want you can also make 🤘.
+            😱 to scare it away and earn a 🤘.
         </p>
         <p>
-            But be careful: if you scream when you see a cat of a different color 🐈, you will ❌!
+            If you don't 😱, you loose a 🤘. If you 😱 when you the cat is of a different color 🐈, you loose a 🤘.
+        </p>
+        <p>
+            When you run out of 🤘 you are ☠️.
+        </p>
+        <p>
+            Reach 7 🤘 to go to the next level.
         </p>
     </div>
 
-    <div id="cats" hidden>
-        <div id="catWrapper"></div>
+    <div id="catsEl" hidden>
+        <div id="catWrapperEl"></div>
     </div>
     <div class="panel">
-        <div id="points" hidden>0</div>
-        <button id="startBtn">start</button>
+        <div class="levelWrapper">level: <span id="levelEl">1</span></div>
+        <div class="pointsWrapper">
+            <div id="pointsEl" hidden></div>
+            <button id="startBtnEl">start</button>
+        </div>
     </div>
 
-    <dialog id="dialog">
+    <dialog id="dialogEl">
         <p>You loose!</p>
-        <button id="restart">restart</button>
+        <button id="restartEl">restart</button>
     </dialog>
 
     <template>

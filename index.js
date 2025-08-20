@@ -1,35 +1,46 @@
-let selectedCat = ''
+let selectedCat
 const MIN_DURATION = 900
 let duration = 2000
 let interval = 200
 const ANIMATION_DURATION = 125
+let lives
+let screamed
+const template = document.querySelector("template");
+// const THRESHOLD = 0.18
+const THRESHOLD = 0.01
+const sides = ['left', 'top-left', 'top-right', 'right', 'bottom-left', 'bottom-right']
+const cats = ['black', 'black', 'black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'grey-striped', 'purple']
+let level = 1
 
 const selectRandom = arr => arr[Math.round(Math.random() * (arr.length - 1))]
 
 const showCat = () => {
-    catWrapper.querySelector('svg')?.classList.remove('in')
-    // selectedCat = ''
+    catWrapperEl.querySelector('svg')?.classList.remove('in')
+
     setTimeout(() => {
-        const cats = ['black', 'black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'purple']
+        if (selectedCat === 'black' && !screamed) {
+            lives--
+            updatePoints()
+        }
+        screamed = false
+
         selectedCat = selectRandom(cats)
 
-        const sides = ['left', 'top-left', 'top-right', 'right', 'bottom-left', 'bottom-right']
-
-        const template = document.querySelector("template");
         const clone = template.content.cloneNode(true);
-        catWrapper.classList = selectRandom(sides)
+        catWrapperEl.classList = selectRandom(sides)
         clone.querySelector('svg').classList = `cat ${selectedCat}`;
-        catWrapper.innerHTML = '';
-        catWrapper.appendChild(clone);
+
+        catWrapperEl.innerHTML = '';
+        catWrapperEl.appendChild(clone);
+
         setTimeout(() => {
-            catWrapper.querySelector('svg').classList.add('in')
+            catWrapperEl.querySelector('svg').classList.add('in')
         }, 10)
 
-        duration = duration - 10
-        if (Number(points.textContent) >= 0) {
+        if (lives > 0) {
             setTimeout(showCat, Math.random() * Math.max(MIN_DURATION, duration))
         }
-    }, ANIMATION_DURATION + interval--)
+    }, ANIMATION_DURATION + interval)
 }
 
 const listenUser = async () => {
@@ -41,7 +52,7 @@ const listenUser = async () => {
 
     const pcmData = new Float32Array(analyserNode.fftSize)
     const onFrame = () => {
-        if (Number(points.textContent) < 0) {
+        if (lives <= 0) {
             return
         }
 
@@ -49,43 +60,53 @@ const listenUser = async () => {
         let sumSquares = 0.0;
         for (const amplitude of pcmData) { sumSquares += amplitude * amplitude; }
         const value = Math.sqrt(sumSquares / pcmData.length)
-        if (value > 0.18) {
+        if (value > THRESHOLD && !screamed) {
             if (selectedCat === 'black') {
-                points.textContent = Number(points.textContent) + 1
+                lives++
             } else {
-                const updatedPoints = Number(points.textContent) - 1
-                points.textContent = updatedPoints
-
-                if (updatedPoints < 0) {
-                    dialog.showModal()
-                }
+                lives--
             }
+            updatePoints()
+
+            screamed = true
         }
         window.requestAnimationFrame(onFrame)
     };
     window.requestAnimationFrame(onFrame)
 }
 
+const updatePoints = () => {
+    if (lives > 0) {
+        if (lives === 7) {
+            level++
+            levelEl.textContent = level
+            lives = 3
+            interval = Math.max(0, interval - 10)
+            duration = Math.max(MIN_DURATION, duration - 100)
+        }
+        pointsEl.textContent = new Array(lives).fill('🤘').join('')
+    } else {
+        dialogEl.showModal()
+    }
+}
+
 const start = () => {
-    instructions.hidden = true
-    cats.hidden = false
-    points.hidden = false
-    startBtn.hidden = true;
+    instructionsEl.hidden = true
+    catsEl.hidden = false
+    pointsEl.hidden = false
+    startBtnEl.hidden = true;
 
-    dialog.close()
+    dialogEl.close()
 
-    points.textContent = 0
-
+    lives = 3
+    updatePoints()
     listenUser()
     showCat()
 }
 
-startBtn.addEventListener('click', start)
+startBtnEl.addEventListener('click', start)
+restartEl.addEventListener('click', start)
 
-restart.addEventListener('click', start)
-
-
-const template = document.querySelector("template");
 const clone = template.content.cloneNode(true);
 clone.querySelector('svg').classList = 'cat black';
-instructions.appendChild(clone);
+instructionsEl.appendChild(clone);
