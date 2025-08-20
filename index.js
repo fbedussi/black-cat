@@ -1,3 +1,4 @@
+import { playWooshSound, playWonTune, playLooseTune } from './audio.js'
 let selectedCat
 const MIN_DURATION = 900
 let duration = 2000
@@ -20,6 +21,7 @@ const showCat = () => {
     setTimeout(() => {
         if (selectedCat === 'black' && !screamed) {
             lives--
+            playLooseTune()
             updatePoints()
         }
         screamed = false
@@ -35,6 +37,7 @@ const showCat = () => {
 
         setTimeout(() => {
             catWrapperEl.querySelector('svg').classList.add('in')
+            playWooshSound(ANIMATION_DURATION * 2 / 1000)
         }, 10)
 
         if (lives > 0) {
@@ -63,8 +66,10 @@ const listenUser = async () => {
         if (value > THRESHOLD && !screamed) {
             if (selectedCat === 'black') {
                 lives++
+                playWonTune()
             } else {
                 lives--
+                playLooseTune()
             }
             updatePoints()
 
