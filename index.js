@@ -1,16 +1,18 @@
 import { playWooshSound, playWonTune, playLooseTune, playBeepBeep } from './audio.js'
+
 let selectedCat
-const MIN_DURATION = 900
-let duration = 2500
-let interval = 250
+const MIN_DURATION = 1200
 const ANIMATION_DURATION = 125
+const THRESHOLD = 0.22
+let duration
+let interval
 let lives
 let screamed
-const template = document.querySelector("template");
-const THRESHOLD = 0.18
+let level
+let waitSound = Promise.resolve()
+
 const sides = ['left', 'top-left', 'top-right', 'right', 'bottom-left', 'bottom-right']
 const cats = ['black', 'black', 'black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'grey-striped', 'purple']
-let level = 1
 
 const selectRandom = arr => arr[Math.round(Math.random() * (arr.length - 1))]
 
@@ -22,9 +24,10 @@ const showCat = () => {
     queue(ANIMATION_DURATION + interval, async () => {
         if (selectedCat === 'black' && !screamed) {
             lives--
-            updatePoints()
             await playLooseTune()
+            await updatePoints()
         }
+        await waitSound
         screamed = false
 
         selectedCat = selectRandom(cats)
@@ -42,7 +45,7 @@ const showCat = () => {
         })
 
         if (lives > 0) {
-            queue(Math.random() * Math.max(MIN_DURATION, duration), showCat)
+            queue(Math.max(MIN_DURATION, Math.random() * duration), showCat)
         }
     },)
 }
@@ -64,16 +67,15 @@ const listenUser = async () => {
         let sumSquares = 0.0;
         for (const amplitude of pcmData) { sumSquares += amplitude * amplitude; }
         const value = Math.sqrt(sumSquares / pcmData.length)
-        console.log(screamed)
         if (value > THRESHOLD && !screamed && document.body.classList.contains('play')) {
+            console.log(value)
             if (selectedCat === 'black') {
                 lives++
-                playWonTune()
+                waitSound = Promise.all([playWonTune(), updatePoints()])
             } else {
                 lives--
-                playLooseTune()
+                waitSound = Promise.all([playLooseTune(), updatePoints()])
             }
-            updatePoints()
             screamed = true
         }
         window.requestAnimationFrame(onFrame)
@@ -100,7 +102,7 @@ const announceNextLevel = async () => {
     })
 }
 
-const updatePoints = () => {
+const updatePoints = async () => {
     if (lives > 0) {
         if (lives === 7) {
             level++
@@ -108,7 +110,7 @@ const updatePoints = () => {
             lives = 3
             interval = Math.max(0, interval - 10)
             duration = Math.max(MIN_DURATION, duration - 100)
-            announceNextLevel()
+            await announceNextLevel()
         }
     } else {
         dialogEl.showModal()
@@ -119,8 +121,11 @@ const updatePoints = () => {
 const start = () => {
     dialogEl.close()
 
+    duration = 2500
+    interval = 250
     lives = 3
     level = 1
+    screamed = false
 
     listenUser()
     updatePoints()
