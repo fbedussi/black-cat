@@ -1,28 +1,29 @@
-import { playWooshSound, playWonTune, playLooseTune } from './audio.js'
+import { playWooshSound, playWonTune, playLooseTune, playBeepBeep } from './audio.js'
 let selectedCat
 const MIN_DURATION = 900
-let duration = 2000
-let interval = 200
+let duration = 2500
+let interval = 250
 const ANIMATION_DURATION = 125
 let lives
 let screamed
 const template = document.querySelector("template");
-// const THRESHOLD = 0.18
-const THRESHOLD = 0.01
+const THRESHOLD = 0.18
 const sides = ['left', 'top-left', 'top-right', 'right', 'bottom-left', 'bottom-right']
 const cats = ['black', 'black', 'black', 'black', 'black', 'white', 'striped', 'spotted', 'red', 'grey', 'grey-striped', 'purple']
 let level = 1
 
 const selectRandom = arr => arr[Math.round(Math.random() * (arr.length - 1))]
 
+const queue = (duration, fn) => new Promise((res) => { setTimeout(() => res(fn()), duration) })
+
 const showCat = () => {
     catWrapperEl.querySelector('svg')?.classList.remove('in')
 
-    setTimeout(() => {
+    queue(ANIMATION_DURATION + interval, async () => {
         if (selectedCat === 'black' && !screamed) {
             lives--
-            playLooseTune()
             updatePoints()
+            await playLooseTune()
         }
         screamed = false
 
@@ -35,15 +36,15 @@ const showCat = () => {
         catWrapperEl.innerHTML = '';
         catWrapperEl.appendChild(clone);
 
-        setTimeout(() => {
+        await queue(10, () => {
             catWrapperEl.querySelector('svg').classList.add('in')
             playWooshSound(ANIMATION_DURATION * 2 / 1000)
-        }, 10)
+        })
 
         if (lives > 0) {
-            setTimeout(showCat, Math.random() * Math.max(MIN_DURATION, duration))
+            queue(Math.random() * Math.max(MIN_DURATION, duration), showCat)
         }
-    }, ANIMATION_DURATION + interval)
+    },)
 }
 
 const listenUser = async () => {
@@ -63,7 +64,8 @@ const listenUser = async () => {
         let sumSquares = 0.0;
         for (const amplitude of pcmData) { sumSquares += amplitude * amplitude; }
         const value = Math.sqrt(sumSquares / pcmData.length)
-        if (value > THRESHOLD && !screamed) {
+        console.log(screamed)
+        if (value > THRESHOLD && !screamed && document.body.classList.contains('play')) {
             if (selectedCat === 'black') {
                 lives++
                 playWonTune()
@@ -72,12 +74,30 @@ const listenUser = async () => {
                 playLooseTune()
             }
             updatePoints()
-
             screamed = true
         }
         window.requestAnimationFrame(onFrame)
     };
     window.requestAnimationFrame(onFrame)
+}
+
+const announceNextLevel = async () => {
+    playBeepBeep()
+
+    document.body.classList = 'introLevel'
+
+    levelAlertEl.innerHTML = `<div class="levelAnnouncement">level ${level}</div>`
+
+    await queue(1000, () => {
+        levelAlertEl.querySelector('.levelAnnouncement').classList.add('hinge')
+        document.body.classList.add('play')
+    })
+    await queue(1000, () => {
+        showCat()
+    })
+    await queue(1000, () => {
+        document.body.classList.remove('introLevel')
+    })
 }
 
 const updatePoints = () => {
@@ -88,25 +108,23 @@ const updatePoints = () => {
             lives = 3
             interval = Math.max(0, interval - 10)
             duration = Math.max(MIN_DURATION, duration - 100)
+            announceNextLevel()
         }
-        pointsEl.textContent = new Array(lives).fill('🤘').join('')
     } else {
         dialogEl.showModal()
     }
+    pointsEl.textContent = new Array(lives).fill('🤘').join('')
 }
 
 const start = () => {
-    instructionsEl.hidden = true
-    catsEl.hidden = false
-    pointsEl.hidden = false
-    startBtnEl.hidden = true;
-
     dialogEl.close()
 
     lives = 3
-    updatePoints()
+    level = 1
+
     listenUser()
-    showCat()
+    updatePoints()
+    announceNextLevel()
 }
 
 startBtnEl.addEventListener('click', start)

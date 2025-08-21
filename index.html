@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="start">
     <div id="instructionsEl">
         <p>
             In 🇮🇹, it's said that 🐈‍⬛ bring bad luck, so when you 👀 one, you should scream loudly
             😱 to scare it away and earn a 🤘.
         </p>
         <p>
-            If you don't 😱, you loose a 🤘. If you 😱 when you the cat is of a different color 🐈, you loose a 🤘.
+            If you don't 😱, you loose a 🤘. If you 😱 when the cat is of a different color 🐈, you loose a 🤘.
         </p>
         <p>
             When you run out of 🤘 you are ☠️.
@@ -25,15 +25,19 @@
         </p>
     </div>
 
-    <div id="catsEl" hidden>
+    <div id="catsEl">
         <div id="catWrapperEl"></div>
     </div>
     <div class="panel">
         <div class="levelWrapper">level: <span id="levelEl">1</span></div>
         <div class="pointsWrapper">
-            <div id="pointsEl" hidden></div>
+            <div id="pointsEl"></div>
             <button id="startBtnEl">start</button>
         </div>
+    </div>
+
+    <div id="levelAlertEl">
+        <div class="levelAnnouncement hinge">level 1</div>
     </div>
 
     <dialog id="dialogEl">
