@@ -28,7 +28,7 @@ const showCat = (delay = ANIMATION_DURATION + interval) => {
     queue(delay, async () => {
         if (selectedCat === 'black' && !screamed) {
             lives--
-            await Promise.all([playLooseTune(), updatePoints()])
+            await Promise.all([playLooseTune(), checkPoint()])
         } else {
             await waitSound
         }
@@ -72,10 +72,10 @@ const listenUser = async () => {
         if (lives > 0 && value > THRESHOLD && !screamed && document.body.classList.contains('play')) {
             if (selectedCat === 'black') {
                 lives++
-                waitSound = Promise.all([playWonTune(), updatePoints()])
+                waitSound = Promise.all([playWonTune(), checkPoint()])
             } else {
                 lives--
-                waitSound = Promise.all([playLooseTune(), updatePoints()])
+                waitSound = Promise.all([playLooseTune(), checkPoint()])
             }
             screamed = true
         }
@@ -102,13 +102,15 @@ const announceNextLevel = async () => {
     })
 }
 
-const updatePoints = async () => {
+const updatePoints = () => pointsEl.innerHTML = `<span>${new Array(Math.max(0, lives)).fill('🤘').join('')}</span><span style="opacity: 0.25">${new Array(Math.max(0, LIVES_PER_LEVEL - lives)).fill('🤘').join('')}</span>`
+
+const checkPoint = async () => {
     if (lives > 0) {
         if (lives === LIVES_PER_LEVEL) {
             level++
             levelEl.textContent = level
             lives = 3
-            pointsEl.textContent = new Array(Math.max(0, lives)).fill('🤘').join('')
+            updatePoints()
 
             interval = Math.max(MIN_INTERVAL, interval - DELTA_LEVEL_INTERVAL)
             duration = Math.max(MIN_DURATION, duration - DELTA_LEVEL_DURATION)
@@ -118,7 +120,7 @@ const updatePoints = async () => {
     } else {
         dialogEl.showModal()
     }
-    pointsEl.textContent = new Array(Math.max(0, lives)).fill('🤘').join('')
+    updatePoints()
 }
 
 const start = () => {
@@ -135,7 +137,7 @@ const start = () => {
     levelEl.textContent = level
 
     listenUser()
-    updatePoints()
+    checkPoint()
     announceNextLevel()
     showCat(1000)
 }
