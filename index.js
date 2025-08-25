@@ -1,12 +1,12 @@
 import { playWooshSound, playWonTune, playLooseTune, playBeepBeep } from './audio.js'
 
-const MIN_DURATION = 1800
+let MIN_DURATION = 1800
 const ANIMATION_DURATION = 125
 const THRESHOLD = 0.20
 const LIVES_PER_LEVEL = 7
 const DELTA_LEVEL_DURATION = 200
 const DELTA_LEVEL_INTERVAL = 20
-const MIN_INTERVAL = 50
+let MIN_INTERVAL = 50
 let duration
 let interval
 let lives
@@ -50,7 +50,7 @@ const showCat = (delay = ANIMATION_DURATION + interval) => {
                 playWooshSound(ANIMATION_DURATION * 2 / 1000)
             })
 
-            const wait = Math.max(MIN_DURATION, Math.random() * duration)
+            const wait = Math.max(0, MIN_DURATION, Math.random() * duration)
             await queue(wait, showCat)
         }
     })
@@ -112,8 +112,11 @@ const checkPoint = async () => {
             lives = 3
             updatePoints()
 
-            interval = Math.max(MIN_INTERVAL, interval - DELTA_LEVEL_INTERVAL)
-            duration = Math.max(MIN_DURATION, duration - DELTA_LEVEL_DURATION)
+            MIN_INTERVAL = Math.max(0, MIN_INTERVAL - DELTA_LEVEL_INTERVAL)
+            MIN_DURATION = Math.max(0, MIN_DURATION - DELTA_LEVEL_DURATION)
+
+            interval = Math.max(0, interval - DELTA_LEVEL_INTERVAL)
+            duration = Math.max(0, duration - DELTA_LEVEL_DURATION)
 
             await announceNextLevel()
         }
