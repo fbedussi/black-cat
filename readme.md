@@ -1,12 +1,18 @@
 This is my entry for the [Js13k Game Jam 2025](https://js13kgames.com). This year's theme is "Black Cat".
 
 # How to play
-In Italy, it's said that black cats bring bad luck, so when you see one, you should scream loudly to scare it away and earn a point. Points are horn signs (🤘), that in Italy keep bad luck away.
-     
-If you don't scream, you loose a point. If you scream when the cat is of a different color, you loose a point.
+In Italy, people say that black cats bring bad luck. But don’t worry—you can chase the curse away! When a black cat appears, scream into your microphone to scare it off and earn a lucky point.
 
-When you run out of points the game is over.
+Points are shown as horn signs (🤘), a traditional Italian gesture believed to keep misfortune away.
 
-Reach 7 points (as the lives every cat has) to go to the next level. At every level the speed increases and the game became more difficult. 
+Be careful:
 
-To play the game you need to allow the access to the microphone and be in a quiet place. 
+Stay silent when you see a non-black cat, or you’ll lose a point.
+
+Miss a scream when a black cat shows up, and you’ll lose a point too!
+
+Run out of points and the game is over.
+
+Survive long enough to reach 7 points—just like the 7 lives every cat has—and you’ll advance to the next level, where the cats move faster and the challenge grows tougher.
+
+🎤 To play, make sure your microphone is on and find a quiet place to shout your way to victory!
